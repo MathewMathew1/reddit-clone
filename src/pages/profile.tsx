@@ -1,6 +1,7 @@
 import { useSession, signOut, signIn } from "next-auth/react"
-import { Head } from "next/document"
+import Head from "next/head";
 import { useState } from "react"
+import Alert from "~/components/Alert";
 import Button from "~/components/Button"
 import { LoadingSpinner } from "~/components/LoadingSpinner"
 import { api } from "~/utils/api"
@@ -64,6 +65,11 @@ export default function Profile()  {
                 <div className="flex flex-col md:flex-row items-center gap-2">
                     <label className="font-medium">Update Your username:</label>
                     <input className="px-4 py-2 border rounded-md w-full max-w-[300px]" placeholder="new username(2-32letters)" value={username} onChange={(e)=>setUsername(e.target.value)}></input>
+                </div>
+                <div>
+                    {errors.map((error, index) => (
+                        <Alert key={index} type="error" message={error} />
+                    ))}
                 </div>
                 <div className="flex justify-end">
                     <Button className="w-[200px]" onClick={()=>changeName()} color="green">Change username</Button>

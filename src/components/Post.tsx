@@ -12,6 +12,7 @@ import CommentSection from "./CommentSection";
 import Editor from "./Editor";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { VoteCounter } from "./VoteCounter";
+import Image from 'next/image';
 
 const md = new MarkdownIt().use(markdownItSanitizer);
 
@@ -24,7 +25,7 @@ const Post = ({postId}:{postId: string|undefined}) => {
     const { data: post, isLoading } = api.post.getPost.useQuery({postId: postIdModified});
 
     const trpcUtils = api.useContext()
-    const voteOnPost = api.post.vote.useMutation({onSuccess: async ({vote}) => {
+    const voteOnPost = api.post.vote.useMutation({onSuccess: ({vote}) => {
         const updateData: Parameters<typeof trpcUtils.post.getPost.setData>[1] = (oldData) => {
             if(oldData == null ) return 
     
@@ -46,7 +47,7 @@ const Post = ({postId}:{postId: string|undefined}) => {
         onSuccess: () => {
             window.location.reload();
         },
-        onError: (e) => {
+        onError: () => {
             setErrors(["Unexpected error try again"])
         }
     })
@@ -80,7 +81,7 @@ const Post = ({postId}:{postId: string|undefined}) => {
                 <VoteCounter handleVote={handleVote} voteCount={post?.voteCount} yourVote={post.yourVote}/>
                 <div className="md:flex justify-center w-[80px] hidden items-center">
                     <a href={imageSrc} target="_blank" rel="noopener noreferrer">
-                        <img className="h-[70px]" width={70} height={70} src={imageSrc} alt={"img"}/>
+                        <Image className="h-[70px]" width={70} height={70} src={imageSrc} alt={"img"}/>
                     </a>
                 </div>
                 <div className="flex flex-col">

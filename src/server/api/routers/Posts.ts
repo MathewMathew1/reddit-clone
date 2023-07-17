@@ -80,7 +80,7 @@ export const postRouter = createTRPCRouter({
         }
       }
 
-      let allPostsModified = allPosts.map((post)=>{ 
+      const allPostsModified = allPosts.map((post)=>{ 
         let yourVote = 0
         let voteCount = 0
         post.votes.map((vote)=>{

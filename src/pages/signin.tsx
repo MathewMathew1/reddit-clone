@@ -1,4 +1,6 @@
 import { getProviders, signIn, getSession  } from 'next-auth/react';
+import Image from 'next/image';
+import { GetServerSidePropsContext } from 'next';
 
 type Provider = {
   id: string;
@@ -29,7 +31,7 @@ export default function SignIn({providers}:{providers: {[key: string]: Provider}
 
                 return(
                   <div key={provider.id} className="flex items-center justify-center bg-gray-100">
-                    <button onClick={()=>signIn(provider.id)} className="flex items-center bg-white border border-gray-300 
+                    <button onClick={()=>void signIn(provider.id)} className="flex items-center bg-white border border-gray-300 
                     rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none 
                     focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                       {Icon && <Icon />}
@@ -46,7 +48,7 @@ export default function SignIn({providers}:{providers: {[key: string]: Provider}
   }
 
   function DiscordIcon()  {
-    return <img className='mr-1' loading="lazy" height="24" width="24" id="provider-logo" src="https://authjs.dev/img/providers/discord.svg"></img>
+    return <Image className='mr-1' alt={"discord"} loading="lazy" height="24" width="24" id="provider-logo" src="https://authjs.dev/img/providers/discord.svg"/>
   }
 
   function GoogleIcon() {
@@ -63,7 +65,7 @@ export default function SignIn({providers}:{providers: {[key: string]: Provider}
       </svg>
   }
 
-  export async function getServerSideProps(context: any) {
+  export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { req } = context;
     const session = await getSession({ req });
   

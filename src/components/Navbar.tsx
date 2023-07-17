@@ -15,9 +15,9 @@ export  const SearchBar = () => {
 
     const communityNames = communities?.map((community) => community.name) || [];
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-            router.push(`/community/${searchedText}`)
+           await router.push(`/community/${searchedText}`)
         }
     };
 
@@ -32,7 +32,7 @@ export  const SearchBar = () => {
         onKeyDown={(e)=>handleKeyDown(e)}
         className="border border-gray-400 rounded-lg p-2 pl-7 w-full sm:w-96"
       />
-      <span onClick={()=>router.push(`/community/${searchedText}`)} className="absolute left-2 mr-2 w-10">
+      <span onClick={()=>void router.push(`/community/${searchedText}`)} className="absolute left-2 mr-2 w-10">
         <VscSearch />
       </span>
       <datalist id="searchOptions">
