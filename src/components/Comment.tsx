@@ -46,7 +46,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
 
     const trpcUtils = api.useContext()
     const voteOnPost = api.comment.vote.useMutation({onSuccess: async ({vote}) => {
-        const updateData: Parameters<typeof trpcUtils.comment.vote.setData>[1] = (oldData) => {
+        const updateData: Parameters<typeof trpcUtils.comment.get.setData>[1] = (oldData) => {
             if(oldData == null ) return 
     
             const voteModifier = vote===VoteEnum.UP ? 1 : -1
