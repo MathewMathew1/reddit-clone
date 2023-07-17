@@ -51,6 +51,8 @@ const CommentSection = ({postId}:{postId: string}) => {
                 firstRowComments.push(comment)
                 return
             }
+            //ignoring warning since group is always created before adding
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             group[comment.replyToId] ||= []
             group[comment.replyToId]!.push(comment)
         })

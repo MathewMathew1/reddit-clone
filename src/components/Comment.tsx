@@ -106,7 +106,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
                                 </p>
                             </div>
                             <div>
-                                <button onClick={()=>openWriteComment()} className="text-xs ml-1 hover:underline">reply</button>
+                                <button onClick={()=>void openWriteComment()} className="text-xs ml-1 hover:underline">reply</button>
                             </div>
                         </div>
                         <div className="custom-html-style mb-2" dangerouslySetInnerHTML={{ __html: `${md.render(comment.content)}` }}></div>
@@ -120,7 +120,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
                     null
                 }
                 <div className="md:ml-3">
-                    {replies.map((comment, index) => (
+                    {replies.map((comment) => (
                         <Comment stackNumber={stackNumber+1} key={`${comment.id}comment`} comment={comment}/>
                     ))}
                 </div>
