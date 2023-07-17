@@ -20,6 +20,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      username: string
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -38,13 +39,21 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+
+    session: async ({ session, user }) => {
+      const userDb = await prisma.user.findFirst({
+        where: {id: user.id}
+      })
+
+      return{ 
+        ...session,
+        user: {
+          ...session.user,
+          username: userDb?.username,
+          id: user.id,
+        },
+      }
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -66,6 +75,9 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
+  pages: {
+    signIn: "/signin",
+  }
 };
 
 /**

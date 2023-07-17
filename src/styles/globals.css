@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.editor-container{
+    flex-direction: row;
+}
+
+.section-container{
+    word-break: break-word;
+
+    overflow: auto !important;
+}
+
+.custom-html-style h1,
+.custom-html-style h2,
+.custom-html-style p,
+.custom-html-style h3,
+.custom-html-style blockquote {
+  margin: 0px 0px!important;
+}
+
+
+@media only screen and (max-width: 764px) {
+    .editor-container{
+        flex-direction: column !important;
+    }
+  }
+
+
+
+

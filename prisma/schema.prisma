@@ -49,10 +49,12 @@ model Session {
 model Community {
     id        String   @id @default(cuid())
     name      String   @unique
+    description  String @db.VarChar(640)
     createdAt DateTime @default(now())
     posts     Post[]
     creator User     @relation(fields: [creatorId], references: [id])
     creatorId       String
+    
     subscribers Subscription[]
 
     @@index([name])
@@ -62,7 +64,7 @@ model Community {
 model Post {
     id          String    @id @default(cuid())
     title       String
-    description     String
+    description     String  @db.VarChar(640)
     imageLink     String?
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
@@ -73,6 +75,7 @@ model Post {
     comments    Comment[] 
     votes       Vote[]
 
+    @@unique([createdAt, id])
     @@index([authorId])
     @@index([communityId])
 }
@@ -90,14 +93,19 @@ model Subscription {
 
 model Comment {
     id String @id @default(uuid())
-    content String
+    content String @db.VarChar(640)
     author      User      @relation(fields: [authorId], references: [id])
     authorId    String
+    createdAt   DateTime  @default(now())
     post  Post @relation(fields: [postId], references: [id])
     postId String
     votes     CommentVote[]
+    replyToId String?
+    replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    replies   Comment[] @relation("ReplyTo")
 
     @@index([postId])
+    @@index([replyToId])
     @@index([authorId])
 }
 
@@ -131,6 +139,7 @@ model User {
     username String? @unique
     email         String?   @unique
     emailVerified DateTime?
+    createdAt DateTime @default(now())
     image         String?
     accounts      Account[]
     sessions      Session[]
