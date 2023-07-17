@@ -101,7 +101,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
                         <div className='ml-2 flex items-center flex-wrap'>
                             <div>
                                 <p className="text-sm font-medium text-gray-900">
-                                    {comment.author.name} {comment.voteCount} {Math.abs(comment.voteCount)===1? "point": "points"} 
+                                    {comment.author.username? comment.author.username: comment.author.name} {comment.voteCount} {Math.abs(comment.voteCount)===1? "point": "points"} 
                                     <span className="ml-2">{formatTimeSince(comment.createdAt)}</span>
                                 </p>
                             </div>
