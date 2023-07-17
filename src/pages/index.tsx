@@ -18,7 +18,7 @@ export default function Home() {
       <div className="flex justify-end flex-1 bg-slate-200">
         <div className='flex-1 mb-4'>
           <h3 className="text-3xl text-center font-bold mb-3">Your Feed:</h3>
-          <div className='mr-3 flex-1 flex justify-end'>
+          
             <InfinitePostList
               posts={posts.data?.pages.flatMap((page) => page.posts)}
               isError={posts.isError}
@@ -26,7 +26,7 @@ export default function Home() {
               hasMore={posts.hasNextPage}
               fetchNewTweets={posts.fetchNextPage}
             />
-          </div>
+         
         </div>
       </div>
       <HomeCard/> 

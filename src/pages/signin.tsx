@@ -1,4 +1,4 @@
-import { getProviders, signIn, getSession  } from 'next-auth/react';
+import { getProviders, signIn, getSession, getCsrfToken  } from 'next-auth/react';
 import Image from 'next/image';
 import type { GetServerSidePropsContext } from 'next';
 
@@ -78,6 +78,7 @@ export default function SignIn({providers}:{providers: {[key: string]: Provider}
     return {
       props: {
         providers: await getProviders(),
+        csrfToken: await getCsrfToken(context),
       },
     };
   }
