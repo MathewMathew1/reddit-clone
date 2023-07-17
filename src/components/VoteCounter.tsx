@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react"
 import { BiSolidDownvote, BiSolidUpvote } from "react-icons/bi"
 import { VoteEnum } from "~/types"
 
-const COLOR_OF_VOTE: any = {
+const COLOR_OF_VOTE: { [key: string]: string } = {
     "-1": "text-blue-500",
     "0": "text-zinc-900",
     "1": "text-orange-400"
@@ -10,7 +10,7 @@ const COLOR_OF_VOTE: any = {
 
 export const VoteCounter = ({handleVote, yourVote, voteCount, showVoteNumber = true, center = true}:
     {yourVote: number, voteCount: number, showVoteNumber?: boolean, handleVote: (vote: VoteEnum) => void, center?: boolean }) => {
-    const voteCountColor: string = COLOR_OF_VOTE[yourVote.toString()]
+    const voteCountColor: string = COLOR_OF_VOTE[yourVote.toString()] || ""
     const session = useSession()
     const user = session.data?.user
 

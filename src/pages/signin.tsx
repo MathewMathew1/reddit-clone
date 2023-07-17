@@ -1,6 +1,6 @@
 import { getProviders, signIn, getSession  } from 'next-auth/react';
 import Image from 'next/image';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 
 type Provider = {
   id: string;

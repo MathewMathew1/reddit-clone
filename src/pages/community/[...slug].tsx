@@ -2,7 +2,7 @@ import type {  NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from 'next/router';
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import Editor from "../../components/Editor";
 import Button from "~/components/Button";
 import { api } from "~/utils/api";
@@ -14,6 +14,7 @@ import useDelayedAction from "~/hooks/useDelayedActions";
 import { useSearchParams } from 'next/navigation'
 import { SortMethodEnum } from "~/types";
 import Head from 'next/head';
+import Image from "next/image";
 
 const Community: NextPage = () => {
     const [joinButtonDisabled, setJoinButtonDisabled] = useState(false)
@@ -28,7 +29,7 @@ const Community: NextPage = () => {
     if(typeof slug === 'string'){
         communityName = slug
     }else if(Array.isArray(slug) && slug.length>0){
-        communityName = slug[0]!
+        communityName = slug[0] || ""
         additionalPageString = slug[1]
         postId = slug[2]
     }
@@ -145,7 +146,7 @@ const Posts = ({communityName}:{communityName: string}) => {
     if(data==null || posts?.length===0 || posts==null) return <div>No Posts have been found</div>
 
     const setPage = (newPage: string) => {
-        push({ query: { ...query, page: newPage } }, undefined, { shallow: true })
+        void push({ query: { ...query, page: newPage } }, undefined, { shallow: true })
     }
 
     return <div  className="flex gap-4 flex-col my-6">
@@ -173,33 +174,35 @@ const CreatePost = ({communityId, communityName}:{communityId: string, community
     const [description, setDescription] = useState("")
     const [imageLink, setImageLink] = useState("")
     const [isAnImage, setIsAnImage] = useState(false);
-    useDelayedAction<string>(imageLink, 1000, handleImageInputChange);
+    useDelayedAction<string>(imageLink, 1000, () => {
+        void handleImageInputChange();
+    });
     const [errors, setErrors] = useState<string[]>([])
     const session = useSession()
     const user = session.data?.user
     const router = useRouter();
     
     async function handleImageInputChange() {
-        setIsAnImage(await checkIfIsImageLink(imageLink));
-    };
+        setIsAnImage(await checkIfIsImageLink(imageLink))
+    }
 
     const checkIfIsImageLink = async (url: string) => {
         try {
-          const response = await fetch(url);
-          const contentType = response.headers.get('Content-Type');
-          if(contentType==null) return false
-          return contentType.startsWith('image/');
+            const response = await fetch(url);
+            const contentType = response.headers.get('Content-Type');
+            if(contentType==null) return false
+            return contentType.startsWith('image/');
         } catch (error) {
-          console.error('Error checking image link:', error);
-          return false;
+            console.error('Error checking image link:', error);
+            return false;
         }
       };
 
     const createPostApi = api.post.create.useMutation({
         onSuccess: (newPost) => {
-          router.push(`/community/${communityName}/post/${newPost.id}`);
+          void router.push(`/community/${communityName}/post/${newPost.id}`);
         },
-        onError: (e: unknown) => { 
+        onError: () => { 
             setErrors(["Unexpected error"])
         }
     })
@@ -269,7 +272,7 @@ const CreatePost = ({communityId, communityName}:{communityId: string, community
 
         {isAnImage?
             <div className="mb-3">
-                <img width={200} height={200} src={imageLink} alt="Image Preview" /> 
+                <Image width={200} height={200} src={imageLink} alt="Image Preview" /> 
             </div>
         :
             null

@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
+import type { ButtonHTMLAttributes, DetailedHTMLProps } from "react"
 
 const COLORS = {
     black: "bg-black hover:bg-gray-800 focus-visible:bg-gray-800",

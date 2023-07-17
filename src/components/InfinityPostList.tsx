@@ -1,32 +1,24 @@
 import InfiniteScroll from "react-infinite-scroll-component";
-
-import { PostType } from "~/types";
+import type { PostType } from "~/types";
 import { LoadingSpinner } from "./LoadingSpinner";
 import PostCard from "./PostCard";
 
-type Tweet = {
-    id: string;
-    content: string;
-    createdAt: Date;
-    likeCount: number;
-    likedByMe: boolean;
-    user: { id: string; image: string | null; name: string | null };
-  };
+
   
-  type InfiniteTweetListProps = {
+type InfinitePostListProps = {
     isLoading: boolean;
     isError: boolean;
     hasMore: boolean | undefined;
     fetchNewTweets: () => Promise<unknown>;
     posts?: PostType[];
-  };
+};
 
 
 export default function InfinitePostList({ posts,
     isError,
     isLoading,
     fetchNewTweets,
-    hasMore = false,}: InfiniteTweetListProps){
+    hasMore = false,}: InfinitePostListProps){
    
     if(isLoading) return <LoadingSpinner/>
 

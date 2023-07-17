@@ -7,7 +7,8 @@ import 'react-markdown-editor-lite/lib/index.css'
 import { formatTimeSince } from "~/helpers/dateHelpers"
 import { VoteEnum } from "~/types"
 import { api } from "~/utils/api"
-import { CommentType, useComments } from "./CommentSection"
+import type { CommentType } from "./CommentSection";
+import { useComments } from "./CommentSection";
 import ReplyComment from "./ReplyComment"
 import { VoteCounter } from "./VoteCounter"
 
@@ -17,8 +18,9 @@ const COLORS: { [key: string]: string } = {
     "2": "bg-slate-200"
 }
 
-
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 const md = new MarkdownIt().use(markdownItSanitizer);
+
 export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumber: number}) => {
     const [isReplying, setIsReplying] = useState<boolean>(false)
     const session = useSession()
@@ -45,7 +47,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
     const replies = commentSection.getReplies(comment.id)
 
     const trpcUtils = api.useContext()
-    const voteOnPost = api.comment.vote.useMutation({onSuccess: async ({vote}) => {
+    const voteOnPost = api.comment.vote.useMutation({onSuccess: ({vote}) => {
         const updateData: Parameters<typeof trpcUtils.comment.get.setData>[1] = (oldData) => {
             if(oldData == null ) return 
     
@@ -70,7 +72,7 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
         voteOnPost.mutate({commentId: comment.id, vote})
     }
 
-    const colorClass = COLORS[(stackNumber % 3).toString()];
+    const colorClass = COLORS[(stackNumber % 3).toString()] || "";
 
     const openWriteComment = () => {
         if(!user){

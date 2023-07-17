@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import dynamic from 'next/dynamic';
-import { Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import 'react-markdown-editor-lite/lib/index.css';
 
 const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
@@ -10,7 +10,7 @@ const MdEditor = dynamic(() => import('react-markdown-editor-lite'), {
 const Editor = ({text, setText, height = 500}:{text: string, setText: Dispatch<SetStateAction<string>>, height?: number}) => {
     const mdParser = new MarkdownIt(/* Markdown-it options */);
 
-    function handleEditorChange({ html, text }:{html: string, text: string}) {
+    function handleEditorChange({ text }:{text: string}) {
         setText(text)
     }
 

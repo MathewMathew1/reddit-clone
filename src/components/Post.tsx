@@ -14,6 +14,7 @@ import { LoadingSpinner } from "./LoadingSpinner";
 import { VoteCounter } from "./VoteCounter";
 import Image from 'next/image';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const md = new MarkdownIt().use(markdownItSanitizer);
 
 const Post = ({postId}:{postId: string|undefined}) => {

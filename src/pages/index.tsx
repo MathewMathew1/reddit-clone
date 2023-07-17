@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
+import { useState } from 'react';
 import { VscHome  } from "react-icons/vsc";
 import Alert from "~/components/Alert";
 import Button from "~/components/Button";
@@ -57,9 +58,9 @@ const ModalCreateCommunity = ({isDialogOpen, setIsDialogOpen}:{isDialogOpen: boo
 
   const createCommunityApi = api.community.create.useMutation({
     onSuccess: (newCommunity) => {
-      router.push(`/community/${newCommunity.name}`);
+      void router.push(`/community/${newCommunity.name}`);
     },
-    onError: (e: unknown) => {
+    onError: () => {
       setErrors(["This name for community is already taken"])
     }
 })

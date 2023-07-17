@@ -1,14 +1,17 @@
 import {VscComment} from "react-icons/vsc"
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { PostType, VoteEnum } from "~/types";
+import type { PostType } from "~/types";
+import { VoteEnum } from "~/types";
 import { VoteCounter } from "./VoteCounter";
 import { formatTimeSince } from "~/helpers/dateHelpers";
 import 'react-markdown-editor-lite/lib/index.css';
 import markdownItSanitizer from 'markdown-it-sanitizer';
 import MarkdownIt from 'markdown-it';
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 const md = new MarkdownIt().use(markdownItSanitizer);
 
 export const PostCard = ({id, title, community, author, description, imageLink, voteCount, yourVote, commentsAmount, createdAt}:PostType) => {
@@ -18,7 +21,7 @@ export const PostCard = ({id, title, community, author, description, imageLink, 
     const imageSrc = imageLink? imageLink: "/logo.png"
 
     const trpcUtils = api.useContext()
-    const voteOnPost = api.post.vote.useMutation({onSuccess: async ({vote}) => {
+    const voteOnPost = api.post.vote.useMutation({onSuccess: ({vote}) => {
         const updateData: Parameters<typeof trpcUtils.post.getPosts.setData>[1] = (oldData) => {
             if(oldData == null ) return 
     
@@ -79,7 +82,7 @@ export const PostCard = ({id, title, community, author, description, imageLink, 
         <div className="flex p-5">
             <VoteCounter handleVote={handleVote} voteCount={voteCount} yourVote={yourVote}/>
             <div className="md:flex justify-center w-[80px] hidden items-center">
-                <img className="h-[70px]" width={70} height={70} src={imageSrc} alt={"img"}/>
+                <Image className="h-[70px]" width={70} height={70} src={imageSrc} alt={"img"}/>
             </div>
             <div className="flex flex-col pl-[1rem] flex-1">
                 <div className="max-h-40 mt-1 text-xs text-gray-500">

@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import type { Dispatch, SetStateAction } from "react"
+import { useState } from "react"
 import { api } from "~/utils/api"
 import Alert from "./Alert"
 import Button from "./Button"
@@ -12,7 +13,7 @@ const ReplyComment = ({commentId, setShowEditor, postId}: {commentId: string, se
         onSuccess: () => {
             window.location.reload();
         },
-        onError: (e: unknown) => {
+        onError: () => {
             setErrors(["Unexpected error try again"])
         }
     })

@@ -29,7 +29,7 @@ export  const SearchBar = () => {
         onChange={(e) => setSearchedText(e.target.value)}
         placeholder="Search communities"
         list="searchOptions"
-        onKeyDown={(e)=>handleKeyDown(e)}
+        onKeyDown={(e)=>void handleKeyDown(e)}
         className="border border-gray-400 rounded-lg p-2 pl-7 w-full sm:w-96"
       />
       <span onClick={()=>void router.push(`/community/${searchedText}`)} className="absolute left-2 mr-2 w-10">

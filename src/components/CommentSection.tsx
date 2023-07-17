@@ -39,7 +39,7 @@ export function useComments(){
 
 const CommentSection = ({postId}:{postId: string}) => {
     const [sortType, setSortType] = useState(SORT_TYPE.NEWEST)
-    const { data: comments, isLoading } = api.comment.get.useQuery({postId: postId});
+    const { data: comments } = api.comment.get.useQuery({postId: postId});
 
     const commentsGrouped = useMemo(() => {
         const group: { [key: string]: CommentType[] } = {};
@@ -58,14 +58,14 @@ const CommentSection = ({postId}:{postId: string}) => {
     }, [comments])
 
     const sortedCommentsGrouped = useMemo(() => {
-        let sortedTopLevelComments = commentsGrouped.firstRowComments
-        let groupReplies = commentsGrouped.group
+        const sortedTopLevelComments = commentsGrouped.firstRowComments
+        const groupReplies = commentsGrouped.group
         if(sortType===SORT_TYPE.NEWEST){
-            sortedTopLevelComments.sort((a, b) => (b.createdAt.getTime() as number) - (a.createdAt.getTime() as number))
+            sortedTopLevelComments.sort((a, b) => (b.createdAt.getTime()) - (a.createdAt.getTime()))
             for (const key in groupReplies) {
                 if (Object.hasOwnProperty.call(groupReplies, key)) {
                   const value = groupReplies[key];
-                  value?.sort((a, b) => (b.createdAt.getTime() as number) - (a.createdAt.getTime() as number))
+                  value?.sort((a, b) => (b.createdAt.getTime()) - (a.createdAt.getTime()))
                 }
             }
         }else{
@@ -94,15 +94,15 @@ const CommentSection = ({postId}:{postId: string}) => {
                 <label>Sort by:</label>
                 <select value={sortType} onChange={(e)=>setSortType(e.target.value)} id="sortSelector">
                 {Object.entries(SORT_TYPE).map(([key, value]) => (
-                    <option key={value} value={value}>{value}</option>
+                    <option key={`${key} option`} value={value}>{value}</option>
                 ))}
                 </select>
             </div>
         </div>
         <div className="mb-4 md:ml-3">
             <CommentsContext.Provider  value={{getReplies}}>
-                {sortedCommentsGrouped.sortedTopLevelComments.map((comment, index) => (
-                    <Comment stackNumber={0} key={`${comment.id}comment`} comment={comment}/>
+                {sortedCommentsGrouped.sortedTopLevelComments.map((comment) => (
+                    <Comment stackNumber={0} key={`${comment.id} comment`} comment={comment}/>
                 ))}
              </CommentsContext.Provider>
         </div>
