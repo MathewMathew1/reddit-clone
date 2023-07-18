@@ -84,7 +84,7 @@ const Community: NextPage = () => {
             <title>{communityName}</title>
         </Head>
             <div className="flex flex-1 flex-col md:flex-row">
-                <div className="justify-center flex">
+                <div className="justify-center flex flex-1">
                     {additionalPageString==="post"?
                         <Post postId={postId}/>
                     :
