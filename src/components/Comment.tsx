@@ -11,6 +11,7 @@ import type { CommentType } from "./CommentSection";
 import { useComments } from "./CommentSection";
 import ReplyComment from "./ReplyComment"
 import { VoteCounter } from "./VoteCounter"
+import { ProfileImage } from './ProfileImage'
 
 const COLORS: { [key: string]: string } = {
     "0": "bg-slate-50",
@@ -99,15 +100,20 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
                     <VoteCounter center={false} showVoteNumber={false} handleVote={handleVote} voteCount={comment.voteCount} yourVote={comment.yourVote}/>
                     <div className="flex flex-col flex-1 ">
                         <div className='ml-2 flex items-center flex-wrap'>
-                            <div>
-                                <p className="text-sm font-medium text-gray-900">
-                                    {comment.author.username? comment.author.username: comment.author.name} {comment.voteCount} {Math.abs(comment.voteCount)===1? "point": "points"} 
+                            <div className='flex flex-col md:flex-row md:gap-2'>
+                                <p className="text-sm font-medium text-gray-900 flex gap-1">
+                                    <ProfileImage className='w-[20px] h-auto' src={comment.author.image}/>
+                                    {comment.author.username? comment.author.username: comment.author.name} 
+                                </p>
+                                <p className="text-sm font-medium text-gray-900 ">
+                                    {comment.voteCount} {Math.abs(comment.voteCount)===1? "point": "points"} 
                                     <span className="ml-2">{formatTimeSince(comment.createdAt)}</span>
+                                    
+                                        <button onClick={()=>void openWriteComment()} className="text-xs ml-1 hover:underline">reply</button>
+                                    
                                 </p>
                             </div>
-                            <div>
-                                <button onClick={()=>void openWriteComment()} className="text-xs ml-1 hover:underline">reply</button>
-                            </div>
+                            
                         </div>
                         <div className="custom-html-style mb-2" dangerouslySetInnerHTML={{ __html: `${md.render(comment.content)}` }}></div>
                     </div>

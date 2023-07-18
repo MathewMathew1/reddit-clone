@@ -27,7 +27,7 @@ export default function InfinitePostList({ posts,
         return <h2 className="my-4 text-center text-2xl text-gray-500">There are no posts in your current feed</h2>
     }
 
-    return<div className='mr-3 flex-1 flex justify-end'>
+    return<div className='md:mr-3 flex-1 flex justify-end max-h-[1200px]  overflow-auto'>
         <ul className="flex gap-2">
             <InfiniteScroll loader={<LoadingSpinner/>} 
             next={fetchNewTweets} 
@@ -35,7 +35,7 @@ export default function InfinitePostList({ posts,
             dataLength={posts.length}>
                 {posts.map((post, index)=> {
                     return <div className="mb-4" key={`post ${index}`}>
-                        <PostCard  {...post}/>
+                        <PostCard  post={post}/>
                     </div>
                 })}
             </InfiniteScroll>

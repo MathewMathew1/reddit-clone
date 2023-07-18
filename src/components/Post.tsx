@@ -76,7 +76,7 @@ const Post = ({postId}:{postId: string|undefined}) => {
 
     const imageSrc = post.imageLink? post.imageLink: "/logo.png"
     
-    return <div className="flex-1 bg-white pt-3">
+    return <div className="flex-1 bg-white">
         <div className="flex  w-full flex-1 bg-slate-100 shadow py-3 px-2 flex-col">
             <div className="flex">
                 <VoteCounter handleVote={handleVote} voteCount={post?.voteCount} yourVote={post.yourVote}/>

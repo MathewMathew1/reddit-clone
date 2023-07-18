@@ -84,7 +84,7 @@ const Community: NextPage = () => {
             <title>{communityName}</title>
         </Head>
             <div className="flex flex-1 flex-col md:flex-row">
-                <div className="flex-1 justify-center flex">
+                <div className="justify-center flex">
                     {additionalPageString==="post"?
                         <Post postId={postId}/>
                     :
@@ -160,7 +160,7 @@ const Posts = ({communityName}:{communityName: string}) => {
                 </select>
             </div>
         {posts.map((post, index) => (        
-            <PostCard key={index}  {...post} />      
+            <PostCard key={index} sortType={sortType}  post={post} />      
         ))}
         <div>
             {pageNumber>1?<Button onClick={()=>setPage((pageNumber-1).toString())} color="black">Previous</Button>:null}

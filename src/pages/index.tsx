@@ -17,8 +17,7 @@ export default function Home() {
     <div className="flex md:flex-row flex-col w-full">
       <div className="flex justify-end flex-1 bg-slate-200">
         <div className='flex-1 mb-4'>
-          <h3 className="text-3xl text-center font-bold mb-3">Your Feed:</h3>
-          
+          <h3 className="text-3xl text-center font-bold mb-3">Your Feed:</h3>     
             <InfinitePostList
               posts={posts.data?.pages.flatMap((page) => page.posts)}
               isError={posts.isError}
@@ -26,7 +25,6 @@ export default function Home() {
               hasMore={posts.hasNextPage}
               fetchNewTweets={posts.fetchNextPage}
             />
-         
         </div>
       </div>
       <HomeCard/> 
@@ -40,7 +38,7 @@ const HomeCard = () => {
   return( 
     <div className="flex flex-col justify-start max-w-xl border border-gray-300 rounded-md leading-6">
       <div className="bg-green-100 p-4 ">
-        <div className="flex items-start font-bold content-center"> <VscHome/>Home Page </div>
+        <div className="flex items-center font-bold "> <VscHome/>Home Page </div>
       </div>
       <div className="p-4">You personal page in ReddiClon. Here you can find latest posts from your personal feed.</div>
       <div className="flex p-3 items-center"><Button onClick={()=>setIsDialogOpen(true)} className="w-full" color="black">Create Community</Button></div>
@@ -92,7 +90,7 @@ const ModalCreateCommunity = ({isDialogOpen, setIsDialogOpen}:{isDialogOpen: boo
   }
 
   return(
-    <dialog className="border-none z-20 rounded-md p-10 shadow-md z-10 min-w-[250px]" open={isDialogOpen}>
+    <dialog className="border-none z-20 rounded-md p-10 shadow-md  min-w-[250px]" open={isDialogOpen}>
       <div className="flex flex-col gap-3">
         <div><h3 className="text-2xl font-bold">Create new Community!</h3></div>
         <div className="flex flex-col">

@@ -20,6 +20,16 @@
   margin: 0px 0px!important;
 }
 
+.custom-html-style code {
+    display: inline-block;
+    white-space: normal;
+    max-width:100%; 
+    word-break:break-all; 
+    word-wrap:break-word;
+  }
+
+
+
 
 @media only screen and (max-width: 764px) {
     .editor-container{

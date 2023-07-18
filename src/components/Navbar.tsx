@@ -51,8 +51,8 @@ export function Navbar(){
 
     return <>
     <nav className="relative flex flex-wrap items-center justify-between px-2 py-3 bg-slate-50 border-b-2 border-gray-300">
-      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between sm:flex-row">
-        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between sm:flex-row gap-2 md:gap-0">
+        <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start ">
             <div className="flex items-start">
                 <Link href="/">
                     <div className="flex">
