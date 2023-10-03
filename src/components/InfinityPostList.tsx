@@ -3,8 +3,6 @@ import type { PostType } from "~/types";
 import { LoadingSpinner } from "./LoadingSpinner";
 import PostCard from "./PostCard";
 
-
-  
 type InfinitePostListProps = {
     isLoading: boolean;
     isError: boolean;
@@ -12,7 +10,6 @@ type InfinitePostListProps = {
     fetchNewTweets: () => Promise<unknown>;
     posts?: PostType[];
 };
-
 
 export default function InfinitePostList({ posts,
     isError,

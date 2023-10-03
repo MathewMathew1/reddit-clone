@@ -24,6 +24,7 @@ const md = new MarkdownIt().use(markdownItSanitizer);
 
 export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumber: number}) => {
     const [isReplying, setIsReplying] = useState<boolean>(false)
+    const [oldVote, setOldVote] = useState(0)
     const session = useSession()
     const user = session.data?.user
     const router = useRouter()
@@ -48,28 +49,51 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
     const replies = commentSection.getReplies(comment.id)
 
     const trpcUtils = api.useContext()
-    const voteOnPost = api.comment.vote.useMutation({onSuccess: ({vote}) => {
+    const voteOnPost = api.comment.vote.useMutation({
+        onError: (error) => {
+          
+            const updateData: Parameters<typeof trpcUtils.comment.get.setData>[1] = (oldData) => {
+                if(oldData == null ) return 
+    
+                return oldData.map((obj) => {
+                     
+                    if (obj.id === comment.id) {
+                        const addedVoteValue = oldVote - obj.yourVote 
+                        return { 
+                            ...obj,
+                            voteCount: obj.voteCount + addedVoteValue,
+                            yourVote: oldVote
+                        };
+                    }
+                    return obj;
+                });
+            }
+            console.log(error)
+            trpcUtils.comment.get.setData({postId: comment.postId}, updateData);
+        }})
+
+    const handleVote = (vote: VoteEnum) => {
         const updateData: Parameters<typeof trpcUtils.comment.get.setData>[1] = (oldData) => {
             if(oldData == null ) return 
     
-            const voteModifier = vote===VoteEnum.UP ? 1 : -1
-            const addedVoteValue = voteModifier - comment.yourVote
-            
             return oldData.map((obj) => {
+
+                
                 if (obj.id === comment.id) {
+                    setOldVote(obj.yourVote)
+                    const voteModifier = vote === VoteEnum.UP ? 1 : -1
+                    const addedVoteValue = obj.yourVote === voteModifier? voteModifier * -1: voteModifier - obj.yourVote
                     return { 
                         ...obj,
-                        voteCount: comment.voteCount + addedVoteValue,
-                        yourVote: voteModifier
+                        voteCount: obj.voteCount + addedVoteValue,
+                        yourVote: obj.yourVote === voteModifier? 0: voteModifier
                     };
                 }
                 return obj;
             });
         }
         trpcUtils.comment.get.setData({postId: comment.postId}, updateData);
-    }})
 
-    const handleVote = (vote: VoteEnum) => {
         voteOnPost.mutate({commentId: comment.id, vote})
     }
 
@@ -101,10 +125,10 @@ export const Comment = ({comment, stackNumber}:{comment: CommentType, stackNumbe
                     <div className="flex flex-col flex-1 ">
                         <div className='ml-2 flex items-center flex-wrap'>
                             <div className='flex flex-col md:flex-row md:gap-2'>
-                                <p className="text-sm font-medium text-gray-900 flex gap-1">
+                                <div className="text-sm font-medium text-gray-900 flex gap-1">
                                     <ProfileImage className='w-[20px] h-auto' src={comment.author.image}/>
                                     {comment.author.username? comment.author.username: comment.author.name} 
-                                </p>
+                                </div>
                                 <p className="text-sm font-medium text-gray-900 ">
                                     {comment.voteCount} {Math.abs(comment.voteCount)===1? "point": "points"} 
                                     <span className="ml-2">{formatTimeSince(comment.createdAt)}</span>

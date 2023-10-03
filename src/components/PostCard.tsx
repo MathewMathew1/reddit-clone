@@ -5,78 +5,122 @@ import { PostType, SortMethodEnum } from "~/types";
 import { VoteEnum } from "~/types";
 import { VoteCounter } from "./VoteCounter";
 import { formatTimeSince } from "~/helpers/dateHelpers";
-
 import markdownItSanitizer from 'markdown-it-sanitizer';
 import MarkdownIt from 'markdown-it';
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
 
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 const md = new MarkdownIt().use(markdownItSanitizer);
 
 export const PostCard = ({post: {id, title, community, author, description, imageLink, voteCount, yourVote, commentsAmount, createdAt}, sortType = SortMethodEnum.TIME}
     :{post: PostType, sortType?: SortMethodEnum}) => {
+    const [oldVote, setOldVote] = useState(0)
     const searchParams = useSearchParams()
  
     const page = searchParams.get('page')
     const imageSrc = imageLink? imageLink: "/logo.png"
-  
     const trpcUtils = api.useContext()
-    const voteOnPost = api.post.vote.useMutation({onSuccess: ({vote}) => {
-        const updateData: Parameters<typeof trpcUtils.post.getPosts.setData>[1] = (oldData) => {
-            console.log(oldData)
-            if(oldData == null ) return 
+    const voteOnPost = api.post.vote.useMutation({
+        onError: (error) => {
+            
+            const updateData = (oldData: any) => {
+                if(oldData == null ) return 
+            
+                oldData.allPostsModified.forEach((obj: { id: string; yourVote: number; voteCount: number; }) => {
+                    if (obj.id === id) {
+                        const addedVoteValue = oldVote - obj.yourVote
+                        obj.voteCount = obj.voteCount + addedVoteValue,
+                        obj.yourVote = oldVote
+                    };
+                })
+
+                return {
+                    ...oldData,
+                    allPostsModified: oldData.allPostsModified
+                }
+            }
+            const updateDataInfinityData: Parameters<typeof trpcUtils.post.getInfinityPosts.setInfiniteData>[1] = (oldData) => {
+
+                if(oldData == null ) return 
     
-            const voteModifier = vote===VoteEnum.UP ? 1 : -1
-            const addedVoteValue = voteModifier - yourVote
+                return {
+                    ...oldData,
+                    pages: oldData.pages.map(page => {
+                    return {
+                        ...page,
+                        posts: page.posts.map(post=> {
+                            if (post.id === id) {
+                                const addedVoteValue = oldVote - post.yourVote
+                                post.voteCount = post.voteCount + addedVoteValue,
+                                post.yourVote = oldVote
+                            };
+    
+        
+                        return post
+                        })
+                    }
+                    }),
+        
+                }
+            }
+            console.log(error)
+
+            trpcUtils.post.getInfinityPosts.setInfiniteData({}, updateDataInfinityData);
+            trpcUtils.post.getPosts.setData({communityName: community.name, page: page ? parseInt(page) : 1, sort: sortType}, updateData);
+        }})
+    
+
+    const handleVote = (vote: VoteEnum) => {
+        const updateData: Parameters<typeof trpcUtils.post.getPosts.setData>[1] = (oldData) => {
+            if(oldData == null ) return 
+            
+            oldData.allPostsModified.forEach((obj: { id: string; yourVote: number; voteCount: number; }) => {
+                if (obj.id === id) {
+                    setOldVote(obj.yourVote)
+                    const voteModifier = vote === VoteEnum.UP ? 1 : -1
+                    const addedVoteValue = obj.yourVote === voteModifier? voteModifier * -1: voteModifier - obj.yourVote
+                    obj.voteCount = obj.voteCount + addedVoteValue,
+                    obj.yourVote = obj.yourVote === voteModifier? 0: voteModifier
+                };
+            })
 
             return {
                 ...oldData,
-                allPostsModified: oldData.allPostsModified.map((obj) => {
-                if (obj.id === id) {
-                    return { 
-                        ...obj,
-                        voteCount: voteCount + addedVoteValue,
-                        yourVote: voteModifier
-                    };
-                }
-                return obj;
-            })}
+                allPostsModified: oldData.allPostsModified
+            }
         }
+
         const updateDataInfinityData: Parameters<typeof trpcUtils.post.getInfinityPosts.setInfiniteData>[1] = (oldData) => {
 
             if(oldData == null ) return 
-    
-            const voteModifier = vote===VoteEnum.UP ? 1 : -1
-            const addedVoteValue = voteModifier - yourVote
-       
+
             return {
                 ...oldData,
                 pages: oldData.pages.map(page => {
-                  return {
+                return {
                     ...page,
                     posts: page.posts.map(post=> {
-                      if(post.id === id){
-                        return {
-                          ...post,
-                          voteCount: voteCount + addedVoteValue,
-                          yourVote: voteModifier
-                        }
-                      }
-      
-                      return post
+                        if (post.id === id) {
+                            setOldVote(post.yourVote)
+                            const voteModifier = vote === VoteEnum.UP ? 1 : -1
+                            const addedVoteValue = post.yourVote === voteModifier? voteModifier * -1: voteModifier - post.yourVote
+                            post.voteCount = post.voteCount + addedVoteValue,
+                            post.yourVote = post.yourVote === voteModifier? 0: voteModifier
+                        };
+
+    
+                    return post
                     })
-                  }
+                }
                 }),
-      
-              }
+    
+            }
         }
 
+        trpcUtils.post.getPosts.setData({communityName: community.name, page: page ? parseInt(page) : 1, sort: sortType}, updateData);
         trpcUtils.post.getInfinityPosts.setInfiniteData({}, updateDataInfinityData);
-        trpcUtils.post.getPosts.setData({communityName: community.name, page: page? parseInt(page): 1, sort: sortType}, updateData);
-    }})
-
-    const handleVote = (vote: VoteEnum) => {
         voteOnPost.mutate({postId: id, vote})
     }
     

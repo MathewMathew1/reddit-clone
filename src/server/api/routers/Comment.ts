@@ -68,13 +68,16 @@ export const commentRouter = createTRPCRouter({
       const voteExisting = await ctx.prisma.commentVote.findFirst({
         where: { commentId: commentId, userId: currentUserId },
       })
-  
+      
       if(voteExisting){
-        if(voteExisting.type===vote) return {vote}
-        await ctx.prisma.commentVote.updateMany({
-          where: { commentId: commentId, userId: currentUserId },
-          data: { type: vote}
-        })
+        if(voteExisting.type===vote){
+          await ctx.prisma.commentVote.deleteMany({where: { commentId: commentId, userId: currentUserId }})
+        }else{
+          await ctx.prisma.commentVote.updateMany({
+            where: { commentId: commentId, userId: currentUserId },
+            data: { type: vote}
+          })
+        }
       }else{
         await ctx.prisma.commentVote.create({
           data: { commentId: commentId, userId: currentUserId, type: vote }

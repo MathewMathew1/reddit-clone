@@ -20,29 +20,33 @@ const md = new MarkdownIt().use(markdownItSanitizer);
 const Post = ({postId}:{postId: string|undefined}) => {
     const [comment, setComment] = useState("")
     const [errors, setErrors] = useState<string[]>([])
-    const postIdModified = postId? postId: ""
+    const [oldVote, setOldVote] = useState(0)
+    
     const session = useSession()
     const user = session.data?.user
+    const postIdModified = postId? postId: ""
     const { data: post, isLoading } = api.post.getPost.useQuery({postId: postIdModified});
 
-    const trpcUtils = api.useContext()
-    const voteOnPost = api.post.vote.useMutation({onSuccess: ({vote}) => {
-        const updateData: Parameters<typeof trpcUtils.post.getPost.setData>[1] = (oldData) => {
-            if(oldData == null ) return 
     
-            const voteModifier = vote===VoteEnum.UP ? 1 : -1
-            const addedVoteValue = voteModifier - oldData.yourVote
-            
-            
-            return { 
-                ...oldData,
-                voteCount: oldData.voteCount + addedVoteValue,
-                yourVote: voteModifier
-            };
-             
-        }
-        trpcUtils.post.getPost.setData({postId: postIdModified}, updateData);
-    }})
+    const trpcUtils = api.useContext()
+    const voteOnPost = api.post.vote.useMutation({
+        onError: (error) => {
+          
+            const updateData = (oldData: any) => {
+
+                const addedVoteValue = oldVote - oldData.yourVote
+                if (oldData == null) return 
+
+                return { 
+                    ...oldData,
+                    voteCount: oldData.voteCount + addedVoteValue,
+                    yourVote: oldVote
+                };
+            }
+            console.log(error)
+            trpcUtils.post.getPost.setData({ postId: postIdModified }, updateData);
+        }}
+    )
 
     const createCommentApi = api.comment.create.useMutation({
         onSuccess: () => {
@@ -68,6 +72,20 @@ const Post = ({postId}:{postId: string|undefined}) => {
     }
 
     function handleVote(vote: VoteEnum){
+        const updateData = (oldData: any) => {
+            setOldVote(oldData.yourVote)
+            const voteModifier = vote === VoteEnum.UP ? 1 : -1
+            const addedVoteValue = oldData.yourVote === voteModifier? voteModifier * -1: voteModifier - oldData.yourVote
+            if (oldData == null) return 
+
+            return { 
+                ...oldData,
+                voteCount: oldData.voteCount + addedVoteValue,
+                yourVote: oldData.yourVote === voteModifier? 0: voteModifier
+            };
+        }
+
+        trpcUtils.post.getPost.setData({ postId: postIdModified }, updateData);
         voteOnPost.mutate({postId: postIdModified, vote})
     }
 
