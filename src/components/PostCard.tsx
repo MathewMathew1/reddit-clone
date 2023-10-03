@@ -25,10 +25,10 @@ export const PostCard = ({post: {id, title, community, author, description, imag
     const voteOnPost = api.post.vote.useMutation({
         onError: (error) => {
             
-            const updateData = (oldData: any) => {
+            const updateData: Parameters<typeof trpcUtils.post.getPosts.setData>[1] = (oldData) => {
                 if(oldData == null ) return 
             
-                oldData.allPostsModified.forEach((obj: { id: string; yourVote: number; voteCount: number; }) => {
+                oldData.allPostsModified.forEach((obj) => {
                     if (obj.id === id) {
                         const addedVoteValue = oldVote - obj.yourVote
                         obj.voteCount = obj.voteCount + addedVoteValue,
@@ -76,7 +76,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
         const updateData: Parameters<typeof trpcUtils.post.getPosts.setData>[1] = (oldData) => {
             if(oldData == null ) return 
             
-            oldData.allPostsModified.forEach((obj: { id: string; yourVote: number; voteCount: number; }) => {
+            oldData.allPostsModified.forEach((obj) => {
                 if (obj.id === id) {
                     setOldVote(obj.yourVote)
                     const voteModifier = vote === VoteEnum.UP ? 1 : -1

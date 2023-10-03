@@ -32,10 +32,10 @@ const Post = ({postId}:{postId: string|undefined}) => {
     const voteOnPost = api.post.vote.useMutation({
         onError: (error) => {
           
-            const updateData = (oldData: any) => {
+            const updateData: Parameters<typeof trpcUtils.post.getPost.setData>[1] = (oldData) => {     
+                if (oldData == null) return 
 
                 const addedVoteValue = oldVote - oldData.yourVote
-                if (oldData == null) return 
 
                 return { 
                     ...oldData,
@@ -72,11 +72,12 @@ const Post = ({postId}:{postId: string|undefined}) => {
     }
 
     function handleVote(vote: VoteEnum){
-        const updateData = (oldData: any) => {
+        const updateData: Parameters<typeof trpcUtils.post.getPost.setData>[1] = (oldData) => {
+            if (oldData == null) return 
+
             setOldVote(oldData.yourVote)
             const voteModifier = vote === VoteEnum.UP ? 1 : -1
             const addedVoteValue = oldData.yourVote === voteModifier? voteModifier * -1: voteModifier - oldData.yourVote
-            if (oldData == null) return 
 
             return { 
                 ...oldData,
