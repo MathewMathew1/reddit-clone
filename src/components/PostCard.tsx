@@ -1,7 +1,8 @@
 import {VscComment} from "react-icons/vsc"
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { PostType, SortMethodEnum } from "~/types";
+import type { PostType } from "~/types";
+import {SortMethodEnum} from "~/types";
 import { VoteEnum } from "~/types";
 import { VoteCounter } from "./VoteCounter";
 import { formatTimeSince } from "~/helpers/dateHelpers";
@@ -31,7 +32,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                 oldData.allPostsModified.forEach((obj) => {
                     if (obj.id === id) {
                         const addedVoteValue = oldVote - obj.yourVote
-                        obj.voteCount = obj.voteCount + addedVoteValue,
+                        obj.voteCount = obj.voteCount + addedVoteValue
                         obj.yourVote = oldVote
                     };
                 })
@@ -53,7 +54,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                         posts: page.posts.map(post=> {
                             if (post.id === id) {
                                 const addedVoteValue = oldVote - post.yourVote
-                                post.voteCount = post.voteCount + addedVoteValue,
+                                post.voteCount = post.voteCount + addedVoteValue
                                 post.yourVote = oldVote
                             };
     
@@ -81,7 +82,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                     setOldVote(obj.yourVote)
                     const voteModifier = vote === VoteEnum.UP ? 1 : -1
                     const addedVoteValue = obj.yourVote === voteModifier? voteModifier * -1: voteModifier - obj.yourVote
-                    obj.voteCount = obj.voteCount + addedVoteValue,
+                    obj.voteCount = obj.voteCount + addedVoteValue
                     obj.yourVote = obj.yourVote === voteModifier? 0: voteModifier
                 };
             })
@@ -106,7 +107,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                             setOldVote(post.yourVote)
                             const voteModifier = vote === VoteEnum.UP ? 1 : -1
                             const addedVoteValue = post.yourVote === voteModifier? voteModifier * -1: voteModifier - post.yourVote
-                            post.voteCount = post.voteCount + addedVoteValue,
+                            post.voteCount = post.voteCount + addedVoteValue
                             post.yourVote = post.yourVote === voteModifier? 0: voteModifier
                         };
 
