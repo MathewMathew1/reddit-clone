@@ -34,7 +34,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                         const addedVoteValue = oldVote - obj.yourVote
                         obj.voteCount = obj.voteCount + addedVoteValue
                         obj.yourVote = oldVote
-                    };
+                    }
                 })
 
                 return {
@@ -56,10 +56,8 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                                 const addedVoteValue = oldVote - post.yourVote
                                 post.voteCount = post.voteCount + addedVoteValue
                                 post.yourVote = oldVote
-                            };
-    
-        
-                        return post
+                            }
+                            return post
                         })
                     }
                     }),
@@ -84,7 +82,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                     const addedVoteValue = obj.yourVote === voteModifier? voteModifier * -1: voteModifier - obj.yourVote
                     obj.voteCount = obj.voteCount + addedVoteValue
                     obj.yourVote = obj.yourVote === voteModifier? 0: voteModifier
-                };
+                }
             })
 
             return {
@@ -109,10 +107,9 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                             const addedVoteValue = post.yourVote === voteModifier? voteModifier * -1: voteModifier - post.yourVote
                             post.voteCount = post.voteCount + addedVoteValue
                             post.yourVote = post.yourVote === voteModifier? 0: voteModifier
-                        };
+                        }
 
-    
-                    return post
+                        return post
                     })
                 }
                 }),
