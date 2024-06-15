@@ -11,9 +11,8 @@ enum VoteType {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url = env("DATABASE_URL")
-    relationMode = "prisma"
 }
 
 
@@ -101,7 +100,7 @@ model Comment {
     postId String
     votes     CommentVote[]
     replyToId String?
-    replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+    replyTo   Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: Restrict, onUpdate: Restrict)
     replies   Comment[] @relation("ReplyTo")
 
     @@index([postId])

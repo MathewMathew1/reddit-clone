@@ -140,7 +140,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
                         <h3 className="h1 text-lg font-semibold py-2 leading-6 text-gray-900 cursor-pointer">{title}</h3>
                     </Link>
                 </div>
-                <div className="overflow-hidden break-words"  >
+                <div className="overflow-hidden break-all"  >
                     <div className="overflow-hidden text-ellipsis line-clamp-5 md:line-clamp-3 custom-html-style" dangerouslySetInnerHTML={{ __html: `${md.render(description)}` }}></div>
                 </div>
             </div>
