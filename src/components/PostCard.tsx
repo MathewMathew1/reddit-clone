@@ -122,7 +122,7 @@ export const PostCard = ({post: {id, title, community, author, description, imag
         voteOnPost.mutate({postId: id, vote})
     }
     
-    return <div className="flex flex-col bg-white rounded-md shadow max-w-[800px] md:min-w-[550px]">
+    return <div className="flex flex-col bg-white rounded-md shadow max-w-[800px] md:min-w-[650px] mr-4">
         <div className="flex p-5">
             <VoteCounter handleVote={handleVote} voteCount={voteCount} yourVote={yourVote}/>
             <div className="md:flex justify-center w-[80px] hidden items-center">
